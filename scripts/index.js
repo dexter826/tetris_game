@@ -199,6 +199,7 @@ class Board {
         this.score = 0;
         this.gameOver = false;
         this.isPlaying = false;
+        this.paused = false;
         this.scoreAudio = new Audio('sounds/score.mp3');
         this.gameOverAudio = new Audio('sounds/game-over.mp3');
     }
@@ -209,6 +210,7 @@ class Board {
         document.getElementById('score').innerHTML = this.score;
         this.grid = this.generateWhiteBoard();
         this.drawBoard();
+        this.paused = false;
     }
 
     // Tạo bảng trắng
@@ -420,9 +422,10 @@ board.ctx.canvas.addEventListener('click', () => {
 function toggleGame() {
     const playButton = document.getElementById('play');
     if (board.isPlaying) {
-        // Stop the game
+        // Tạm dừng game
         clearInterval(gameInterval);
         board.isPlaying = false;
+        board.paused = true;  // đánh dấu game đang bị tạm dừng
         playButton.querySelector('.button-82-front').textContent = 'Play';
 
         // Dừng nhạc
@@ -435,13 +438,18 @@ function toggleGame() {
         drawOverlay();
         board.ctx.canvas.classList.add('pointer-cursor');
     } else {
-        // Start the game
-        board.reset();
-        generateNewBrick();
+        // Nếu game không đang chơi
+        // Nếu không phải ở trạng thái tạm dừng (ví dụ: game mới hoặc đã game over) thì reset game
+        if (!board.paused) {
+            board.reset();
+            generateNewBrick();
+        }
+        // Nếu đang tạm dừng thì chỉ tiếp tục (resume) mà không reset lại trạng thái
         board.isPlaying = true;
+        board.paused = false;
         playButton.querySelector('.button-82-front').textContent = 'Stop';
 
-        // Tự động rơi
+        // Bắt đầu lại tiến trình rơi của brick
         gameInterval = setInterval(() => {
             if (!board.gameOver) {
                 brick.moveDown();

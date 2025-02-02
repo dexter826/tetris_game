@@ -449,6 +449,7 @@ function toggleGame() {
         board.isPlaying = true;
         board.paused = false;
         playButton.querySelector('.button-82-front').textContent = 'Stop';
+        board.drawBoard();
 
         // Bắt đầu lại tiến trình rơi của brick
         gameInterval = setInterval(() => {

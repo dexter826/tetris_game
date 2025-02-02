@@ -419,6 +419,7 @@ board.ctx.canvas.addEventListener('click', () => {
     }
 });
 
+// Sửa đổi hàm toggleGame()
 function toggleGame() {
     const playButton = document.getElementById('play');
     if (board.isPlaying) {

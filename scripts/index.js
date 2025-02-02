@@ -485,6 +485,11 @@ function toggleGame() {
     }
 }
 
+overlayElem.addEventListener('click', () => {
+    hideOverlay();
+    toggleGame();
+});
+
 document.addEventListener('keydown', (event) => {
     if (!board.gameOver && board.isPlaying) {
         switch (event.key) {

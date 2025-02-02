@@ -40,8 +40,37 @@ h3 {
   cursor: pointer;
 }
 
+#game-container {
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+}
+
 #board {
   border: 2px solid black;
+}
+
+#overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  /* Ẩn overlay khi game đang chạy */
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Ví dụ icon play được tạo bằng CSS */
+#overlay-play {
+  width: 0;
+  height: 0;
+  border-left: 20px solid white;
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
 }
 
 /* CSS button */

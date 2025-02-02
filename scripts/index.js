@@ -188,6 +188,8 @@ const KEY_CODE = {
 const WHITE_COLOR_ID = 7;
 const canvas = document.getElementById('board');
 const ctx = canvas.getContext('2d');
+const overlayElem = document.getElementById('overlay');
+
 
 ctx.canvas.width = COLS * BLOCK_SIZE;
 ctx.canvas.height = ROWS * BLOCK_SIZE;
@@ -383,6 +385,16 @@ function generateNewBrick() {
     brick = new Brick(Math.floor(Math.random() * 10) % BRICK_LAYOUT.length);
 }
 
+// Hàm hiển thị overlay (khi game tạm dừng)
+function showOverlay() {
+    overlayElem.style.display = 'flex'; // dùng flex để căn giữa nội dung bên trong
+  }
+  
+  // Hàm ẩn overlay (khi tiếp tục chơi)
+  function hideOverlay() {
+    overlayElem.style.display = 'none';
+  }
+
 function drawOverlay() {
     board.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
     board.ctx.fillRect(0, 0, board.ctx.canvas.width, board.ctx.canvas.height);
@@ -435,8 +447,7 @@ function toggleGame() {
             playMusic.currentTime = 0;
         }
 
-        // Vẽ overlay
-        drawOverlay();
+        showOverlay();
         board.ctx.canvas.classList.add('pointer-cursor');
     } else {
         // Nếu game không đang chơi
@@ -449,7 +460,8 @@ function toggleGame() {
         board.isPlaying = true;
         board.paused = false;
         playButton.querySelector('.button-82-front').textContent = 'Stop';
-        board.drawBoard();
+
+        hideOverlay();
 
         // Bắt đầu lại tiến trình rơi của brick
         gameInterval = setInterval(() => {

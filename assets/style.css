@@ -6,7 +6,14 @@
 }
 
 body {
-  background-color: #e6e6e6;
+  /* background-color: #e6e6e6; */
+  background-image: url(/assets/img/galaxy.jpg);
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  overflow: hidden;
 }
 
 #title {
@@ -14,7 +21,7 @@ body {
   margin-top: 40px;
   font-size: 2.5rem;
   font-size: 52px;
-  background-image: linear-gradient(red, blue);
+  background-image: linear-gradient(rgb(188, 188, 188), rgb(0, 0, 180));
   color: transparent;
   background-clip: text;
 }
@@ -71,6 +78,11 @@ h3 {
   border-left: 20px solid white;
   border-top: 15px solid transparent;
   border-bottom: 15px solid transparent;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
 }
 
 /* CSS button */
@@ -165,4 +177,40 @@ h3 {
 
 .button-82-pushable:focus:not(:focus-visible) {
   outline: none;
+}
+
+/* Arrow key */
+/* Sắp xếp các nút theo đúng vị trí */
+.navigation-keys {
+  display: grid;
+  grid-template-areas:
+  ". up ."
+  "left down right";
+  gap: 10px;
+  /* Khoảng cách giữa các nút */
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.navigation-keys span {
+  font-family: none;
+  font-size: 1rem;
+}
+
+/* Arrow-key */
+.navigation-keys .up {
+  grid-area: up;
+}
+
+.navigation-keys .left {
+  grid-area: left;
+}
+
+.navigation-keys .down {
+  grid-area: down;
+}
+
+.navigation-keys .right {
+  grid-area: right;
 }

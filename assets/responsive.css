@@ -1,0 +1,49 @@
+/* Mobile */
+@media (max-width: 768px) {
+    body {
+        touch-action: manipulation;
+    }
+    .container {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 10px;
+    }
+
+    #title {
+        display: none;
+    }
+
+    .side-bar {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 20px;
+        order: 1;
+    }
+
+    .side-bar h3,
+    .side-bar p {
+        font-size: 0.8rem;
+    }
+
+    #game-container {
+        display: flex;
+        flex-direction: column;
+        order: 2;
+    }
+
+    .navigation-keys {
+        order: 3;
+    }
+}
+
+/* PC */
+@media (min-width: 1024px) {
+    .navigation-keys {
+        display: none;
+    }
+}

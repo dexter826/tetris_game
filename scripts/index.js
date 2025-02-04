@@ -1,6 +1,13 @@
 /**** CONSTANTS ****/
-const COLS = 10;
-const ROWS = 20;
+let COLS = 10;
+let ROWS = 20;
+if (window.innerWidth < 500) {
+    COLS = 9;
+    ROWS = 18;
+    document.addEventListener('gesturestart', function (event) {
+        event.preventDefault(); // Chặn pinch zoom trên iOS
+    });
+}
 const BLOCK_SIZE = 30;
 const COLOR_MAPPING = [
     'red',
@@ -190,6 +197,11 @@ const canvas = document.getElementById('board');
 const ctx = canvas.getContext('2d');
 const overlayElem = document.getElementById('overlay');
 
+// arrow-key
+const upKey = document.querySelector('.up');
+const downKey = document.querySelector('.down');
+const leftKey = document.querySelector('.left');
+const rightKey = document.querySelector('.right');
 
 ctx.canvas.width = COLS * BLOCK_SIZE;
 ctx.canvas.height = ROWS * BLOCK_SIZE;
@@ -263,6 +275,7 @@ class Board {
         this.gameOver = true;
         this.isPlaying = false;
         this.gameOverAudio.play();
+        document.getElementById('play').querySelector('.button-82-front').textContent = 'Play';
         Swal.fire({
             icon: "error",
             title: "GAME OVER!!!",
@@ -270,6 +283,11 @@ class Board {
         });
         this.grid = this.generateWhiteBoard();
         this.drawBoard();
+        // Dừng nhạc và reset
+        if (playMusic) {
+            playMusic.pause();
+            playMusic.currentTime = 0;
+        }
     }
 }
 
@@ -388,12 +406,12 @@ function generateNewBrick() {
 // Hàm hiển thị overlay (khi game tạm dừng)
 function showOverlay() {
     overlayElem.style.display = 'flex'; // dùng flex để căn giữa nội dung bên trong
-  }
-  
-  // Hàm ẩn overlay (khi tiếp tục chơi)
-  function hideOverlay() {
+}
+
+// Hàm ẩn overlay (khi tiếp tục chơi)
+function hideOverlay() {
     overlayElem.style.display = 'none';
-  }
+}
 
 function drawOverlay() {
     board.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
@@ -425,26 +443,26 @@ document.getElementById('play').addEventListener('click', () => {
     toggleGame();
 });
 
-board.ctx.canvas.addEventListener('click', () => {
-    if (!board.isPlaying) {
-        toggleGame();
-    }
-});
+// board.ctx.canvas.addEventListener('click', () => {
+//     if (!board.isPlaying) {
+//         toggleGame();
+//     }
+// });
 
 // Sửa đổi hàm toggleGame()
 function toggleGame() {
     const playButton = document.getElementById('play');
+    
     if (board.isPlaying) {
         // Tạm dừng game
         clearInterval(gameInterval);
         board.isPlaying = false;
         board.paused = true;  // đánh dấu game đang bị tạm dừng
-        playButton.querySelector('.button-82-front').textContent = 'Play';
+        playButton.querySelector('.button-82-front').textContent = '►';
 
         // Dừng nhạc
         if (playMusic) {
             playMusic.pause();
-            playMusic.currentTime = 0;
         }
 
         showOverlay();
@@ -455,11 +473,12 @@ function toggleGame() {
         if (!board.paused) {
             board.reset();
             generateNewBrick();
+            playButton.querySelector('.button-82-front').textContent = 'Play';
         }
         // Nếu đang tạm dừng thì chỉ tiếp tục (resume) mà không reset lại trạng thái
         board.isPlaying = true;
         board.paused = false;
-        playButton.querySelector('.button-82-front').textContent = 'Stop';
+        playButton.querySelector('.button-82-front').textContent = '=';
 
         hideOverlay();
 
@@ -472,14 +491,13 @@ function toggleGame() {
             }
         }, 1000);
 
-        // Phát nhạc
-        playMusic = new Audio('sounds/play-music.wav');
-        playMusic.volume = 0.1;
+        // Phát lại nhạc nền từ vị trí tạm dừng
+        if (!playMusic) {
+            playMusic = new Audio('sounds/play-music.wav');
+            playMusic.volume = 0.1;
+            playMusic.loop = true; // Lặp nhạc liên tục
+        }
         playMusic.play();
-        playMusic.addEventListener('ended', () => {
-            playMusic.currentTime = 0;
-            playMusic.play();
-        });
 
         board.ctx.canvas.classList.remove('pointer-cursor');
     }
@@ -488,6 +506,29 @@ function toggleGame() {
 overlayElem.addEventListener('click', () => {
     hideOverlay();
     toggleGame();
+});
+
+// Xử lí sự kiện khi click vào các nút điều hướng trên mobile
+document.addEventListener('click', (event) => {
+    if (!board.gameOver && board.isPlaying) {
+        const targetButton = event.target.closest('button');
+        switch (targetButton) {
+            case upKey:
+                brick.rotate();
+                break;
+            case downKey:
+                brick.moveDown();
+                break;
+            case leftKey:
+                brick.moveLeft();
+                break;
+            case rightKey:
+                brick.moveRight();
+                break;
+            default:
+                break;
+        }
+    }
 });
 
 document.addEventListener('keydown', (event) => {
